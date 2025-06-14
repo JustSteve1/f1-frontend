@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bell, Shield, User, Smartphone, Mail, Lock, Trash2, LogOut } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Bell, Shield, User, Smartphone, Mail, Lock, Trash2, Database } from 'lucide-react';
 
 const SettingsPage: React.FC = () => {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   const [settings, setSettings] = useState({
     notifications: {
       raceStart: true,
@@ -22,15 +18,6 @@ const SettingsPage: React.FC = () => {
       analytics: true
     }
   });
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
 
   const updateNotificationSetting = (key: string, value: boolean) => {
     setSettings(prev => ({
@@ -67,16 +54,6 @@ const SettingsPage: React.FC = () => {
     </button>
   );
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-black pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Please sign in to access settings</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-black pt-16 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -88,7 +65,7 @@ const SettingsPage: React.FC = () => {
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-            <p className="text-gray-400">Manage your account and preferences</p>
+            <p className="text-gray-400">Manage your preferences and account settings</p>
           </div>
 
           {/* Account Information */}
@@ -102,7 +79,7 @@ const SettingsPage: React.FC = () => {
               <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
                 <div>
                   <p className="text-white font-medium">Email</p>
-                  <p className="text-gray-400 text-sm">{user.email}</p>
+                  <p className="text-gray-400 text-sm">fan@f1dashboard.com</p>
                 </div>
                 <button className="text-red-400 hover:text-red-300 transition-colors">
                   <Mail className="h-5 w-5" />
@@ -256,19 +233,30 @@ const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Danger Zone */}
+          {/* Data Management */}
           <div className="bg-gray-900/50 backdrop-blur-sm border border-red-500/20 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Danger Zone</h2>
+            <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
+              <Database className="h-5 w-5 mr-2" />
+              Data Management
+            </h2>
             
             <div className="space-y-4">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={handleSignOut}
+                className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors"
+              >
+                <Database className="h-5 w-5" />
+                <span>Export Data</span>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className="w-full flex items-center justify-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-lg transition-colors"
               >
-                <LogOut className="h-5 w-5" />
-                <span>Sign Out</span>
+                <Trash2 className="h-5 w-5" />
+                <span>Clear Cache</span>
               </motion.button>
 
               <motion.button
@@ -277,7 +265,7 @@ const SettingsPage: React.FC = () => {
                 className="w-full flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg transition-colors"
               >
                 <Trash2 className="h-5 w-5" />
-                <span>Delete Account</span>
+                <span>Reset All Settings</span>
               </motion.button>
             </div>
           </div>

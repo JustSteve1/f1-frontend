@@ -4,7 +4,6 @@ import StatCard from '../components/Dashboard/StatCard';
 import PromptBar from '../components/Dashboard/PromptBar';
 import FilterPanel from '../components/Dashboard/FilterPanel';
 import { StatCard as StatCardType } from '../types';
-import { useAuth } from '../contexts/AuthContext';
 
 const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState<StatCardType[]>([]);
@@ -15,14 +14,11 @@ const DashboardPage: React.FC = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuth();
 
   // Mock data generator
   const generateMockStat = (): StatCardType => {
     const types: StatCardType['type'][] = ['text', 'chart', 'image'];
     const categories: StatCardType['category'][] = ['timing', 'position', 'telemetry', 'weather', 'general'];
-    const drivers = ['Max Verstappen', 'Lewis Hamilton', 'Charles Leclerc', 'Lando Norris'];
-    const teams = ['Red Bull Racing', 'Mercedes', 'Ferrari', 'McLaren'];
 
     const mockStats = [
       {
@@ -126,7 +122,7 @@ const DashboardPage: React.FC = () => {
           >
             <h1 className="text-4xl font-bold text-white mb-2">Live Race Dashboard</h1>
             <p className="text-gray-300">
-              Welcome back, {user?.name || user?.email || 'F1 Fan'}! 
+              Real-time F1 data and insights
               {filteredStats.length > 0 && ` • ${filteredStats.length} updates`}
             </p>
           </motion.div>

@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Calendar, Heart, Users, Edit3, Save, X } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    favorite_drivers: user?.favorite_drivers || [],
-    favorite_teams: user?.favorite_teams || []
+  const [userData, setUserData] = useState({
+    name: 'F1 Enthusiast',
+    email: 'fan@f1dashboard.com',
+    favorite_drivers: ['Max Verstappen', 'Lewis Hamilton'],
+    favorite_teams: ['Red Bull Racing', 'Mercedes'],
+    created_at: '2024-01-15'
   });
+
+  const [editedUser, setEditedUser] = useState(userData);
 
   const drivers = ['Max Verstappen', 'Lewis Hamilton', 'Charles Leclerc', 'Lando Norris', 'George Russell', 'Carlos Sainz', 'Sergio Perez', 'Fernando Alonso'];
   const teams = ['Red Bull Racing', 'Mercedes', 'Ferrari', 'McLaren', 'Aston Martin', 'Alpine', 'Williams', 'AlphaTauri'];
 
   const handleSave = () => {
-    // In a real app, this would update the user in Supabase
-    console.log('Saving user data:', editedUser);
+    setUserData(editedUser);
     setIsEditing(false);
   };
 
@@ -40,16 +40,6 @@ const ProfilePage: React.FC = () => {
     }));
   };
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-black pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Please sign in to view your profile</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-black pt-16 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -66,9 +56,9 @@ const ProfilePage: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">
-                  {user.name || 'F1 Fan'}
+                  {userData.name}
                 </h1>
-                <p className="text-gray-400">Member since {new Date(user.created_at).toLocaleDateString()}</p>
+                <p className="text-gray-400">Member since {new Date(userData.created_at).toLocaleDateString()}</p>
               </div>
             </div>
             
@@ -86,7 +76,10 @@ const ProfilePage: React.FC = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsEditing(false)}
+                    onClick={() => {
+                      setEditedUser(userData);
+                      setIsEditing(false);
+                    }}
                     className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors"
                   >
                     <X className="h-5 w-5" />
@@ -126,7 +119,7 @@ const ProfilePage: React.FC = () => {
                     />
                   ) : (
                     <p className="text-white bg-gray-800/50 rounded-lg px-4 py-3">
-                      {user.name || 'Not set'}
+                      {userData.name}
                     </p>
                   )}
                 </div>
@@ -137,7 +130,7 @@ const ProfilePage: React.FC = () => {
                     Email
                   </label>
                   <p className="text-white bg-gray-800/50 rounded-lg px-4 py-3">
-                    {user.email}
+                    {userData.email}
                   </p>
                 </div>
 
@@ -147,7 +140,7 @@ const ProfilePage: React.FC = () => {
                     Member Since
                   </label>
                   <p className="text-white bg-gray-800/50 rounded-lg px-4 py-3">
-                    {new Date(user.created_at).toLocaleDateString()}
+                    {new Date(userData.created_at).toLocaleDateString()}
                   </p>
                 </div>
               </div>
@@ -181,8 +174,8 @@ const ProfilePage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {user.favorite_drivers.length > 0 ? (
-                      user.favorite_drivers.map((driver) => (
+                    {userData.favorite_drivers.length > 0 ? (
+                      userData.favorite_drivers.map((driver) => (
                         <div key={driver} className="bg-red-600/20 text-red-400 px-3 py-2 rounded-lg">
                           {driver}
                         </div>
@@ -218,8 +211,8 @@ const ProfilePage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {user.favorite_teams.length > 0 ? (
-                      user.favorite_teams.map((team) => (
+                    {userData.favorite_teams.length > 0 ? (
+                      userData.favorite_teams.map((team) => (
                         <div key={team} className="bg-red-600/20 text-red-400 px-3 py-2 rounded-lg">
                           {team}
                         </div>

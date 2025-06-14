@@ -1,26 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Zap, Timer, Flag, Star, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
-import Header from '../components/Layout/Header';
-import SignUpModal from '../components/Auth/SignUpModal';
-import SignInModal from '../components/Auth/SignInModal';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const HomePage: React.FC = () => {
-  const [showSignUp, setShowSignUp] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
-  const handleGetStarted = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      setShowSignUp(true);
-    }
-  };
 
   const features = [
     {
@@ -88,8 +72,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-black">
-      <Header onSignInClick={() => setShowSignIn(true)} onSignUpClick={() => setShowSignUp(true)} />
-
       {/* Hero Section */}
       <section className="pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -112,18 +94,18 @@ const HomePage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={handleGetStarted}
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-red-500/25"
               >
-                {user ? 'Go to Dashboard' : 'Get Started Free'}
+                Explore Features
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' })}
                 className="border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300"
               >
-                Learn More
+                View Schedule
               </motion.button>
             </div>
           </motion.div>
@@ -303,24 +285,6 @@ const HomePage: React.FC = () => {
           </p>
         </div>
       </footer>
-
-      {/* Modals */}
-      <SignUpModal
-        isOpen={showSignUp}
-        onClose={() => setShowSignUp(false)}
-        onSwitchToSignIn={() => {
-          setShowSignUp(false);
-          setShowSignIn(true);
-        }}
-      />
-      <SignInModal
-        isOpen={showSignIn}
-        onClose={() => setShowSignIn(false)}
-        onSwitchToSignUp={() => {
-          setShowSignIn(false);
-          setShowSignUp(true);
-        }}
-      />
     </div>
   );
 };
