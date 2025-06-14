@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import BottomNav from './components/Layout/BottomNav';
+import Header from './components/Layout/Header';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -36,7 +37,10 @@ const AppContent: React.FC = () => {
           path="/dashboard" 
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <>
+                <Header />
+                <DashboardPage />
+              </>
             </ProtectedRoute>
           } 
         />
@@ -44,7 +48,10 @@ const AppContent: React.FC = () => {
           path="/profile" 
           element={
             <ProtectedRoute>
-              <ProfilePage />
+              <>
+                <Header />
+                <ProfilePage />
+              </>
             </ProtectedRoute>
           } 
         />
@@ -52,7 +59,10 @@ const AppContent: React.FC = () => {
           path="/settings" 
           element={
             <ProtectedRoute>
-              <SettingsPage />
+              <>
+                <Header />
+                <SettingsPage />
+              </>
             </ProtectedRoute>
           } 
         />

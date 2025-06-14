@@ -16,8 +16,8 @@ const BottomNav: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
-      <div className="bg-black/90 backdrop-blur-md border-t border-red-500/20">
-        <div className="flex items-center justify-around py-2">
+      <div className="bg-black/95 backdrop-blur-md border-t border-red-500/20">
+        <div className="flex items-center justify-around py-2 px-2">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
@@ -27,8 +27,10 @@ const BottomNav: React.FC = () => {
                 key={item.path}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${
-                  isActive ? 'text-red-500' : 'text-gray-400 hover:text-white'
+                className={`relative flex flex-col items-center py-3 px-4 rounded-xl transition-all duration-200 ${
+                  isActive 
+                    ? 'text-red-500 bg-red-500/10' 
+                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                 }`}
               >
                 <Icon className="h-5 w-5 mb-1" />
@@ -36,7 +38,7 @@ const BottomNav: React.FC = () => {
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-red-500 rounded-full"
+                    className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-red-500 rounded-full"
                   />
                 )}
               </motion.button>
