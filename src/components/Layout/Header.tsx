@@ -24,6 +24,15 @@ const Header: React.FC<HeaderProps> = ({ onSignInClick, onSignUpClick }) => {
     }
   };
 
+  const handleNavigation = (path: string) => {
+    if (!user && path !== '/') {
+      // If user is not signed in and trying to access protected routes, show sign in modal
+      onSignInClick?.();
+    } else {
+      navigate(path);
+    }
+  };
+
   const navigationItems = [
     { label: 'Dashboard', path: '/dashboard', icon: BarChart3 },
     { label: 'Profile', path: '/profile', icon: User },
@@ -57,44 +66,48 @@ const Header: React.FC<HeaderProps> = ({ onSignInClick, onSignUpClick }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {user ? (
-              // Authenticated user navigation
+            {/* Always show main navigation items */}
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              const isAccessible = user || item.path === '/';
+              
+              return (
+                <motion.button
+                  key={item.path}
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => handleNavigation(item.path)}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    isActive 
+                      ? 'text-red-400 bg-red-500/10' 
+                      : isAccessible
+                        ? 'text-white hover:text-red-400 hover:bg-red-500/5'
+                        : 'text-gray-500 hover:text-red-400 hover:bg-red-500/5'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                  {!user && item.path !== '/' && (
+                    <div className="w-2 h-2 bg-red-500 rounded-full ml-1" />
+                  )}
+                </motion.button>
+              );
+            })}
+
+            {/* Public navigation (only on homepage) */}
+            {location.pathname === '/' && (
               <>
-                {navigationItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <motion.button
-                      key={item.path}
-                      whileHover={{ scale: 1.05 }}
-                      onClick={() => navigate(item.path)}
-                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                        isActive 
-                          ? 'text-red-400 bg-red-500/10' 
-                          : 'text-white hover:text-red-400 hover:bg-red-500/5'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </motion.button>
-                  );
-                })}
+                <div className="w-px h-6 bg-gray-600 mx-2" />
+                {publicNavItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="text-white hover:text-red-400 transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ))}
               </>
-            ) : (
-              // Public navigation (only on homepage)
-              location.pathname === '/' && (
-                <>
-                  {publicNavItems.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className="text-white hover:text-red-400 transition-colors"
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                </>
-              )
             )}
           </nav>
 
@@ -210,19 +223,49 @@ const Header: React.FC<HeaderProps> = ({ onSignInClick, onSignUpClick }) => {
                 </>
               ) : (
                 <>
+                  {/* Always show main navigation items in mobile */}
+                  {navigationItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <button
+                        key={item.path}
+                        onClick={() => {
+                          handleNavigation(item.path);
+                          setIsMenuOpen(false);
+                        }}
+                        className={`flex items-center justify-between p-3 rounded-lg transition-colors text-left ${
+                          isActive 
+                            ? 'text-red-400 bg-red-500/10' 
+                            : 'text-white hover:text-red-400 hover:bg-red-500/5'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon className="h-5 w-5" />
+                          <span>{item.label}</span>
+                        </div>
+                        {item.path !== '/' && (
+                          <div className="w-2 h-2 bg-red-500 rounded-full" />
+                        )}
+                      </button>
+                    );
+                  })}
+
                   {/* Public navigation (only on homepage) */}
                   {location.pathname === '/' && (
                     <>
-                      {publicNavItems.map((item) => (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="text-white hover:text-red-400 transition-colors p-3 rounded-lg hover:bg-red-500/5"
-                        >
-                          {item.label}
-                        </a>
-                      ))}
+                      <div className="border-t border-red-500/20 pt-4">
+                        {publicNavItems.map((item) => (
+                          <a
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block text-white hover:text-red-400 transition-colors p-3 rounded-lg hover:bg-red-500/5"
+                          >
+                            {item.label}
+                          </a>
+                        ))}
+                      </div>
                     </>
                   )}
                   
